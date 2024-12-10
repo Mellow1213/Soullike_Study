@@ -57,6 +57,21 @@ namespace SG
             SceneManager.activeSceneChanged -= OnSceneChange;
         }
 
+        private void OnApplicationFocus(bool hasFocus)
+        {
+            if (enabled)
+            {
+                if (hasFocus)
+                {
+                    _playerInput.Enable();
+                }
+                else
+                {
+                    _playerInput.Disable();
+                }
+            }
+        }
+
         public Vector2 GetMove()
         {
             return instance.isActiveAndEnabled ? movementInput : Vector2.zero;
