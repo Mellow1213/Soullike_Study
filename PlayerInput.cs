@@ -35,6 +35,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Mouse"",
+                    ""type"": ""Value"",
+                    ""id"": ""1cf3d00a-b492-42c2-bcea-5b07533608d8"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -92,6 +101,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""753b2350-8eef-4407-b8c6-5ed668e3a5bf"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Mouse"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -101,6 +121,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         // PlayerMovement
         m_PlayerMovement = asset.FindActionMap("PlayerMovement", throwIfNotFound: true);
         m_PlayerMovement_Movement = m_PlayerMovement.FindAction("Movement", throwIfNotFound: true);
+        m_PlayerMovement_Mouse = m_PlayerMovement.FindAction("Mouse", throwIfNotFound: true);
     }
 
     ~@PlayerInput()
@@ -168,11 +189,13 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_PlayerMovement;
     private List<IPlayerMovementActions> m_PlayerMovementActionsCallbackInterfaces = new List<IPlayerMovementActions>();
     private readonly InputAction m_PlayerMovement_Movement;
+    private readonly InputAction m_PlayerMovement_Mouse;
     public struct PlayerMovementActions
     {
         private @PlayerInput m_Wrapper;
         public PlayerMovementActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Movement => m_Wrapper.m_PlayerMovement_Movement;
+        public InputAction @Mouse => m_Wrapper.m_PlayerMovement_Mouse;
         public InputActionMap Get() { return m_Wrapper.m_PlayerMovement; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -185,6 +208,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Movement.started += instance.OnMovement;
             @Movement.performed += instance.OnMovement;
             @Movement.canceled += instance.OnMovement;
+            @Mouse.started += instance.OnMouse;
+            @Mouse.performed += instance.OnMouse;
+            @Mouse.canceled += instance.OnMouse;
         }
 
         private void UnregisterCallbacks(IPlayerMovementActions instance)
@@ -192,6 +218,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Movement.started -= instance.OnMovement;
             @Movement.performed -= instance.OnMovement;
             @Movement.canceled -= instance.OnMovement;
+            @Mouse.started -= instance.OnMouse;
+            @Mouse.performed -= instance.OnMouse;
+            @Mouse.canceled -= instance.OnMouse;
         }
 
         public void RemoveCallbacks(IPlayerMovementActions instance)
@@ -212,5 +241,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     public interface IPlayerMovementActions
     {
         void OnMovement(InputAction.CallbackContext context);
+        void OnMouse(InputAction.CallbackContext context);
     }
 }

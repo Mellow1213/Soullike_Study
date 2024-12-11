@@ -33,17 +33,16 @@ public class PlayerLocomotionManager : CharacterLocomotionManager
     private void GroundMovement()
     {
         Vector2 inputVector = InputManager.instance.GetMove();
-        Vector3 forward = PlayerCamera.instance.transform.forward * inputVector.y;
-        Vector3 right = PlayerCamera.instance.transform.right * inputVector.x;
+        
+        Vector3 forward = PlayerCamera.instance.cameraObject.transform.forward * inputVector.y;
+        Vector3 right = PlayerCamera.instance.cameraObject.transform.right * inputVector.x;
         moveVec = (forward + right).normalized;
         moveVec.y = 0;
-        //Debug.Log("moveVec = " + moveVec);
+        Debug.Log("moveVec = " + moveVec);
 
         currentSpeed = isRun ? walkSpeed : runSpeed;
-        // todo - Grounded Movement
-        // todo - Jump and Air Movement
         _characterController.Move(moveVec * (currentSpeed * Time.deltaTime));
-
+//        Debug.Log(moveVec);
         if (moveVec != Vector3.zero)
         {
             Quaternion targetRotation = Quaternion.LookRotation(moveVec);

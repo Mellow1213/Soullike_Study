@@ -27,6 +27,7 @@ namespace SG
         public IEnumerator LoadNewGame()
         {
             AsyncOperation loadOperator = SceneManager.LoadSceneAsync(worldSceneIndex);
+            Cursor.lockState = CursorLockMode.Locked;
             yield return null;
         }
 

@@ -10,6 +10,7 @@ namespace SG
         public static InputManager instance;
         private PlayerInput _playerInput;
         [SerializeField] private Vector2 movementInput;
+        [SerializeField] private Vector2 mouseInput;
 
         private void Awake()
         {
@@ -48,6 +49,8 @@ namespace SG
             {
                 _playerInput = new PlayerInput();
                 _playerInput.PlayerMovement.Movement.performed += i => movementInput = i.ReadValue<Vector2>();
+                _playerInput.PlayerMovement.Mouse.performed  += i => mouseInput = i.ReadValue<Vector2>();
+                _playerInput.PlayerMovement.Mouse.canceled  += i => mouseInput = Vector2.zero;
                 _playerInput.Enable();
             }
         }
@@ -75,6 +78,11 @@ namespace SG
         public Vector2 GetMove()
         {
             return instance.isActiveAndEnabled ? movementInput : Vector2.zero;
+        }
+
+        public Vector2 GetMouse()
+        {
+            return instance.isActiveAndEnabled ? mouseInput : Vector2.zero;
         }
     }
 }

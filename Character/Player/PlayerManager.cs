@@ -6,6 +6,7 @@ namespace SG
     public class PlayerManager : CharacterManager
     {
         private PlayerLocomotionManager _playerLocomotionManager;
+        [SerializeField] private Transform cameraTarget;
         protected override void Awake()
         {
             base.Awake();
@@ -25,7 +26,7 @@ namespace SG
 
             if (IsOwner)
             {
-                PlayerCamera.instance._playerManager = this;
+                PlayerCamera.instance.SetFollowTarget(cameraTarget);
             }
         }
 
