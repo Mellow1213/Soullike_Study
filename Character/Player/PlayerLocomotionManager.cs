@@ -37,7 +37,7 @@ public class PlayerLocomotionManager : CharacterLocomotionManager
         Vector3 right = PlayerCamera.instance.transform.right * inputVector.x;
         moveVec = (forward + right).normalized;
         moveVec.y = 0;
-        Debug.Log("moveVec = " + moveVec);
+        //Debug.Log("moveVec = " + moveVec);
 
         currentSpeed = isRun ? walkSpeed : runSpeed;
         // todo - Grounded Movement

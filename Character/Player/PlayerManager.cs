@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace SG
@@ -16,6 +17,24 @@ namespace SG
             base.Update();
             if (!IsOwner) return;
             _playerLocomotionManager.HandleAllMovement();
+        }
+
+        public override void OnNetworkSpawn()
+        {
+            base.OnNetworkSpawn();
+
+            if (IsOwner)
+            {
+                PlayerCamera.instance._playerManager = this;
+            }
+        }
+
+        protected override void LateUpdate()
+        {
+            if (!IsOwner)
+                return;
+            base.LateUpdate();
+            PlayerCamera.instance.ControlCamera();
         }
     }
 }

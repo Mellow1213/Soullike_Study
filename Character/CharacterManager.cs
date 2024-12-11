@@ -37,5 +37,10 @@ namespace SG
                     _characterNetworkManager.networkRotationSmoothTime);
             }
         }
+
+        protected virtual void LateUpdate()
+        {
+            //throw new NotImplementedException();
+        }
     }
 }
