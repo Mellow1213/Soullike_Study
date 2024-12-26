@@ -7,13 +7,15 @@ namespace SG
     public class CharacterManager : NetworkBehaviour
     {
         private CharacterController _characterController;
-        private CharacterNetworkManager _characterNetworkManager;
+        [HideInInspector] public CharacterNetworkManager _characterNetworkManager;
+
+        [HideInInspector] public Animator _animator;
         protected virtual void Awake()
         {
             DontDestroyOnLoad(this);
-
             _characterController = GetComponent<CharacterController>();
             _characterNetworkManager = GetComponent<CharacterNetworkManager>();
+            _animator = GetComponent<Animator>();
         }
 
         protected virtual void Update()

@@ -5,12 +5,14 @@ namespace SG
 {
     public class PlayerManager : CharacterManager
     {
-        private PlayerLocomotionManager _playerLocomotionManager;
+        [HideInInspector] public PlayerLocomotionManager _playerLocomotionManager;
+        [HideInInspector] public PlayerAnimationManager _playerAnimationManager;
         [SerializeField] private Transform cameraTarget;
         protected override void Awake()
         {
             base.Awake();
             _playerLocomotionManager = GetComponent<PlayerLocomotionManager>();
+            _playerAnimationManager = GetComponent<PlayerAnimationManager>();
         }
 
         protected override void Update()
@@ -18,6 +20,7 @@ namespace SG
             base.Update();
             if (!IsOwner) return;
             _playerLocomotionManager.HandleAllMovement();
+            
         }
 
         public override void OnNetworkSpawn()
@@ -27,6 +30,7 @@ namespace SG
             if (IsOwner)
             {
                 PlayerCamera.instance.SetFollowTarget(cameraTarget);
+                InputManager.instance._playerManager = this;
             }
         }
 

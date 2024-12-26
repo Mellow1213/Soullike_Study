@@ -8,6 +8,7 @@ namespace SG
     public class InputManager : MonoBehaviour
     {
         public static InputManager instance;
+        public PlayerManager _playerManager;
         private PlayerInput _playerInput;
         [SerializeField] private Vector2 movementInput;
         [SerializeField] private Vector2 mouseInput;
