@@ -11,7 +11,7 @@ public class PlayerLocomotionManager : CharacterLocomotionManager
     private Vector3 moveVec;
     [SerializeField] private float walkSpeed = 3.0f;
     [SerializeField] private float runSpeed = 6.0f;
-    [SerializeField] private bool isRun = false;
+    [SerializeField] private bool isSprint = false;
     public float currentSpeed;
     [SerializeField] private float rotateSpeed = 15.0f;
 
@@ -32,13 +32,14 @@ public class PlayerLocomotionManager : CharacterLocomotionManager
             player._characterNetworkManager.animatorVerticalParameter.Value = verticalMovement;
             player._characterNetworkManager.animatorHorizontalParameter.Value = horizontalMovement;
             player._characterNetworkManager.networkMoveAmount.Value = moveAmount;
+            player._characterNetworkManager.networkSprintState.Value = isSprint;
         }
         else
         {
             verticalMovement = player._characterNetworkManager.animatorVerticalParameter.Value;
             horizontalMovement = player._characterNetworkManager.animatorHorizontalParameter.Value;
             moveAmount = player._characterNetworkManager.networkMoveAmount.Value;
-            
+            isSprint = player._characterNetworkManager.networkSprintState.Value;
             player._playerAnimationManager.UpdateAllAnimation(0, moveAmount);
         }
         
@@ -52,12 +53,13 @@ public class PlayerLocomotionManager : CharacterLocomotionManager
     private void GroundMovement()
     {
         Vector2 inputVector = InputManager.instance.GetMove();
+        isSprint = InputManager.instance.GetSprint();
         Vector3 forward = PlayerCamera.instance.cameraObject.transform.forward * inputVector.y;
         Vector3 right = PlayerCamera.instance.cameraObject.transform.right * inputVector.x;
         moveVec = (forward + right).normalized;
         moveVec.y = 0;
         moveAmount = moveVec.magnitude;
-        currentSpeed = isRun ? runSpeed : walkSpeed;
+        currentSpeed = isSprint ? runSpeed : walkSpeed;
         _characterController.Move(moveVec * (currentSpeed * Time.deltaTime));
         Debug.Log(player);
         Debug.Log(player._playerAnimationManager);
