@@ -16,7 +16,6 @@ namespace SG
         
         public override void UpdateAllAnimation(float horizontalValue, float verticalValue)
         {
-            Debug.Log("호출");
             base.UpdateAllAnimation(horizontalValue, verticalValue);
         }
     }

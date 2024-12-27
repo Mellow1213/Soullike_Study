@@ -8,12 +8,12 @@ public class PlayerLocomotionManager : CharacterLocomotionManager
     public float horizontalMovement;
     public float moveAmount;
 
-    private Vector3 moveVec;
-    [SerializeField] private float walkSpeed = 3.0f;
+    [SerializeField] private float walkSpeed = 1.0f;
     [SerializeField] private float runSpeed = 6.0f;
     [SerializeField] private bool isSprint = false;
     public float currentSpeed;
     [SerializeField] private float rotateSpeed = 15.0f;
+    private Vector3 moveDirection;
 
     private Transform cameraT;
     
@@ -27,7 +27,7 @@ public class PlayerLocomotionManager : CharacterLocomotionManager
     protected override void Update()
     {
         base.Update();
-        if (player.IsOwner)
+        if (player.IsOwner) // 내 플레이어면 값을 서버로 보내고 아니면 값을 서버에서 가져온다
         {
             player._characterNetworkManager.animatorVerticalParameter.Value = verticalMovement;
             player._characterNetworkManager.animatorHorizontalParameter.Value = horizontalMovement;
@@ -40,9 +40,8 @@ public class PlayerLocomotionManager : CharacterLocomotionManager
             horizontalMovement = player._characterNetworkManager.animatorHorizontalParameter.Value;
             moveAmount = player._characterNetworkManager.networkMoveAmount.Value;
             isSprint = player._characterNetworkManager.networkSprintState.Value;
-            player._playerAnimationManager.UpdateAllAnimation(0, moveAmount);
+            player._playerAnimationManager.UpdateAllAnimation(0, moveAmount * (isSprint ? 2 : 1));
         }
-        
     }
     
     public void HandleAllMovement()
@@ -52,23 +51,32 @@ public class PlayerLocomotionManager : CharacterLocomotionManager
 
     private void GroundMovement()
     {
+        // Get Input
         Vector2 inputVector = InputManager.instance.GetMove();
         isSprint = InputManager.instance.GetSprint();
+        Debug.Log(isSprint);
+        
+        // Calculate base vector by Player Camera
         Vector3 forward = PlayerCamera.instance.cameraObject.transform.forward * inputVector.y;
         Vector3 right = PlayerCamera.instance.cameraObject.transform.right * inputVector.x;
-        moveVec = (forward + right).normalized;
-        moveVec.y = 0;
-        moveAmount = moveVec.magnitude;
+        moveDirection = (forward + right).normalized;
+        moveDirection.y = 0;
+        
+        // Decide current speed
+        moveAmount = moveDirection.magnitude;
         currentSpeed = isSprint ? runSpeed : walkSpeed;
-        _characterController.Move(moveVec * (currentSpeed * Time.deltaTime));
-        Debug.Log(player);
-        Debug.Log(player._playerAnimationManager);
         verticalMovement = inputVector.magnitude;
         horizontalMovement = inputVector.magnitude;
-        player._playerAnimationManager.UpdateAllAnimation(0, verticalMovement*2f);
-        if (moveVec != Vector3.zero)
+        
+        // Do Move
+        _characterController.Move(moveDirection * (currentSpeed * Time.deltaTime));
+        player._playerAnimationManager.UpdateAllAnimation(0, moveAmount * (isSprint ? 2 : 1));
+        
+        // Do Rotate
+        // When input is zero, Do not perform Rotation.
+        if (moveDirection != Vector3.zero)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(moveVec);
+            Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
             Quaternion currentRotation =
                 Quaternion.Slerp(transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
             transform.rotation = currentRotation;
