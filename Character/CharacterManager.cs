@@ -18,14 +18,23 @@ namespace SG
             _animator = GetComponent<Animator>();
         }
 
+        protected virtual void Start()
+        {
+            
+        }
         protected virtual void Update()
         {
-            if (IsOwner)
+            SyncTransform();
+        }
+
+        private void SyncTransform()
+        {
+            if (IsOwner) // 내 캐릭터면 네트워크 포지션이 이곳이라고 송신
             {
                 _characterNetworkManager.networkPosition.Value = transform.position;
                 _characterNetworkManager.networkRotation.Value = transform.rotation;
             }
-            else
+            else // 남의 캐릭터면 네트워크 포지션을 수신받아 값 변경
             {
                 transform.position = Vector3.SmoothDamp(
                     transform.position,

@@ -13,24 +13,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "Mouse",
-                    "type": "Value",
-                    "id": "1cf3d00a-b492-42c2-bcea-5b07533608d8",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
-                    "name": "Sprint",
-                    "type": "Button",
-                    "id": "ec6b2d14-312d-4de0-9e92-2ef903d1113d",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -88,10 +70,27 @@
                     "action": "Movement",
                     "isComposite": false,
                     "isPartOfComposite": true
-                },
+                }
+            ]
+        },
+        {
+            "name": "PlayerCamera",
+            "id": "7789982d-092c-4a36-bab2-942308522dbb",
+            "actions": [
+                {
+                    "name": "Mouse",
+                    "type": "Value",
+                    "id": "2abc1f5d-6ec3-46e3-9186-b49dcf2578d1",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
                 {
                     "name": "",
-                    "id": "753b2350-8eef-4407-b8c6-5ed668e3a5bf",
+                    "id": "088b7bc5-45ce-476c-9f88-3475ff016de7",
                     "path": "<Mouse>/delta",
                     "interactions": "",
                     "processors": "",
@@ -99,15 +98,52 @@
                     "action": "Mouse",
                     "isComposite": false,
                     "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "PlayerAction",
+            "id": "a6b124bd-cd8e-43a4-abe9-a712d13c705c",
+            "actions": [
+                {
+                    "name": "Sprint",
+                    "type": "Button",
+                    "id": "c02764df-ef91-4573-b56f-163beffffc25",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
+                    "name": "Dodge",
+                    "type": "Button",
+                    "id": "54775cd1-4b8c-4045-9448-a8b3aa854441",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
                     "name": "",
-                    "id": "e051a9e6-6680-4340-9c84-d4c428689e67",
+                    "id": "594dfe30-c29b-48a9-b567-776bdb319517",
                     "path": "<Keyboard>/leftShift",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Sprint",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1be85a7c-21c2-4c42-b519-92f5819a7802",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dodge",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

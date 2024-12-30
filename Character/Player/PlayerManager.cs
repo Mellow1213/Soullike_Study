@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.XR;
 
 namespace SG
 {
@@ -15,12 +16,16 @@ namespace SG
             _playerAnimationManager = GetComponent<PlayerAnimationManager>();
         }
 
+        protected override void Start()
+        {
+            InputManager.instance.OnDodge += HandleDodge;
+        }
+
         protected override void Update()
         {
             base.Update();
             if (!IsOwner) return;
             _playerLocomotionManager.HandleAllMovement();
-            
         }
 
         public override void OnNetworkSpawn()
@@ -40,6 +45,12 @@ namespace SG
                 return;
             base.LateUpdate();
             PlayerCamera.instance.ControlCamera();
+        }
+
+        private void HandleDodge()
+        {
+            if (!IsOwner) return;
+            _playerLocomotionManager.AttemptToTryDodge();
         }
     }
 }
