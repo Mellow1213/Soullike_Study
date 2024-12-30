@@ -54,23 +54,27 @@ public class PlayerLocomotionManager : CharacterLocomotionManager
         // Get Input
         Vector2 inputVector = InputManager.instance.GetMove();
         isSprint = InputManager.instance.GetSprint();
-        Debug.Log(isSprint);
         
         // Calculate base vector by Player Camera
         Vector3 forward = PlayerCamera.instance.cameraObject.transform.forward * inputVector.y;
         Vector3 right = PlayerCamera.instance.cameraObject.transform.right * inputVector.x;
-        moveDirection = (forward + right).normalized;
-        moveDirection.y = 0;
+        forward.y = 0;
+        right.y = 0;
+        moveDirection = (forward + right).normalized; // y를 0으로 만들고 정규화. 정규화 후 y=0으로 순서가 바뀌면 정규화 때 y값 때문에 moveDirection.magnitude가 이론 값보다 더 작아짐.
         
         // Decide current speed
-        moveAmount = moveDirection.magnitude;
         currentSpeed = isSprint ? runSpeed : walkSpeed;
+        if (moveDirection == Vector3.zero)
+            currentSpeed = 0;
         verticalMovement = inputVector.magnitude;
         horizontalMovement = inputVector.magnitude;
+        Vector3 finalMoveVector = moveDirection * currentSpeed;
+        Debug.Log("벡터의 길이 = " + finalMoveVector.magnitude);
+        Debug.Log("이동값 = " + currentSpeed);
+        moveAmount = currentSpeed;
         
         // Do Move
-        _characterController.Move(moveDirection * (currentSpeed * Time.deltaTime));
-        player._playerAnimationManager.UpdateAllAnimation(0, moveAmount * (isSprint ? 2 : 1));
+        _characterController.Move(finalMoveVector * Time.deltaTime);
         
         // Do Rotate
         // When input is zero, Do not perform Rotation.
@@ -81,5 +85,8 @@ public class PlayerLocomotionManager : CharacterLocomotionManager
                 Quaternion.Slerp(transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
             transform.rotation = currentRotation;
         }
+        
+        // Update Animation
+        player._playerAnimationManager.UpdateAllAnimation(0, moveAmount);
     }
 }
