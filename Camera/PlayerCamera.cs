@@ -54,7 +54,7 @@ namespace SG
             // Follow Player
             FollowPlayer();
             // Rotate Around Player by Mouse
-             RotatePlayer();
+            RotatePlayer();
             // Block by Obstacle (like wall)
             CheckCollision();
         }

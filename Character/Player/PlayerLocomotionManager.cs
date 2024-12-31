@@ -1,5 +1,6 @@
 using SG;
 using UnityEngine;
+using Unity.Netcode;
 
 namespace SG
 {
@@ -99,7 +100,14 @@ namespace SG
 
         public void AttemptToTryDodge()
         {
-            Debug.Log("구르기 눌림!!");
+            if (InputManager.instance.GetMove() == Vector2.zero)
+            {
+                player._playerAnimationManager.UpdateRollAnimation("Backflip", true);
+            }
+            else
+            {
+                player._playerAnimationManager.UpdateRollAnimation("roll_front", true);
+            }
         }
     }
 }

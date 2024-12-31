@@ -23,7 +23,10 @@ namespace SG
         public NetworkVariable<float> networkMoveAmount =
             new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
-        [Header("Status")] public NetworkVariable<bool> networkSprintState = new NetworkVariable<bool>(false,
+        
+
+        [Header("Action")] 
+        public NetworkVariable<bool> networkSprintState = new NetworkVariable<bool>(false,
             NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     }
 }
