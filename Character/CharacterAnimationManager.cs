@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Unity.Netcode;
 
 namespace SG
 {
@@ -25,6 +26,7 @@ namespace SG
             _characterManager._animator.applyRootMotion = applyRootMotion;
             _characterManager._animator.CrossFade(targetAnimation, 0.2f);
             isPerformingAction = actionState;
+            _characterManager._characterNetworkManager.NotifyTheServerOfActionAnimationServerRpc(NetworkManager.Singleton.LocalClientId, targetAnimation);
         }
     }
 }

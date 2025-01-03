@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Unity.Netcode;
 
@@ -5,6 +6,7 @@ namespace SG
 {
     public class CharacterNetworkManager : NetworkBehaviour
     {
+        private CharacterManager _characterManager;
         [Header("Position")] 
         public NetworkVariable<Vector3> networkPosition = new NetworkVariable<Vector3>(Vector3.zero, 
             NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -23,10 +25,38 @@ namespace SG
         public NetworkVariable<float> networkMoveAmount =
             new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
-        
+
+        protected virtual void Awake()
+        {
+
+            _characterManager = GetComponent<CharacterManager>();
+        }
 
         [Header("Action")] 
         public NetworkVariable<bool> networkSprintState = new NetworkVariable<bool>(false,
             NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
+        [ServerRpc]
+        public void NotifyTheServerOfActionAnimationServerRpc(ulong clientID, string animationID)
+        {
+            if (IsServer)
+            {
+                PlayActionAnimationForAllClientsClientRpc(clientID, animationID);
+            }
+        }
+
+        [ClientRpc]
+        public void PlayActionAnimationForAllClientsClientRpc(ulong clientID, string animationID)
+        {
+            if (clientID != NetworkManager.Singleton.LocalClientId)
+            {
+                PerformActionAnimationFromServer(animationID);
+            }
+        }
+
+        private void PerformActionAnimationFromServer(string animationID)
+        {
+            _characterManager._animator.CrossFade(animationID, 0.2f);
+        }
     }
 }
