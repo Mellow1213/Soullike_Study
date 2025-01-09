@@ -35,6 +35,7 @@ namespace SG
             if (IsOwner)
             {
                 PlayerCamera.instance.SetFollowTarget(cameraTarget);
+                // PlayerUIManager.instance._playerUIHUDManager 
                 InputManager.instance._playerManager = this;
             }
         }
