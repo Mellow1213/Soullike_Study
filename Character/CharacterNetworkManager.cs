@@ -24,17 +24,19 @@ namespace SG
             new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<float> networkMoveAmount =
             new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-
-
-        protected virtual void Awake()
-        {
-
-            _characterManager = GetComponent<CharacterManager>();
-        }
-
+        public NetworkVariable<bool> isDoingAction = new NetworkVariable<bool>(false,
+            NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        
         [Header("Action")] 
         public NetworkVariable<bool> networkSprintState = new NetworkVariable<bool>(false,
             NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
+        [Header("Stats")] public NetworkVariable<int> endurance = new NetworkVariable<int>(1,
+            NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        protected virtual void Awake()
+        {
+            _characterManager = GetComponent<CharacterManager>();
+        }
 
         [ServerRpc]
         public void NotifyTheServerOfActionAnimationServerRpc(ulong clientID, string animationID)

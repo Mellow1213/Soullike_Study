@@ -14,6 +14,7 @@ namespace SG
         [SerializeField] private float walkSpeed = 1.0f;
         [SerializeField] private float runSpeed = 6.0f;
         [SerializeField] private bool isSprint = false;
+        [SerializeField] private bool isAction = false;
         public float currentSpeed;
         [SerializeField] private float rotateSpeed = 15.0f;
         private Vector3 moveDirection;
@@ -39,6 +40,7 @@ namespace SG
                 player._characterNetworkManager.animatorHorizontalParameter.Value = horizontalMovement;
                 player._characterNetworkManager.networkMoveAmount.Value = moveAmount;
                 player._characterNetworkManager.networkSprintState.Value = isSprint;
+                player._characterNetworkManager.isDoingAction.Value = isAction;
             }
             else
             {
@@ -47,6 +49,7 @@ namespace SG
                 moveAmount = player._characterNetworkManager.networkMoveAmount.Value;
                 isSprint = player._characterNetworkManager.networkSprintState.Value;
                 player._playerAnimationManager.UpdateAllAnimation(0, moveAmount);
+                isAction = player._characterNetworkManager.isDoingAction.Value;
             }
         }
 
@@ -72,6 +75,8 @@ namespace SG
 
             // Decide current speed
             currentSpeed = isSprint ? runSpeed : walkSpeed;
+            if (isAction)
+                currentSpeed = 0;
             if (moveDirection == Vector3.zero)
                 currentSpeed = 0;
             verticalMovement = inputVector.magnitude;
@@ -86,7 +91,7 @@ namespace SG
 
             // Do Rotate
             // When input is zero, Do not perform Rotation.
-            if (moveDirection != Vector3.zero)
+            if (moveDirection != Vector3.zero && !isAction)
             {
                 Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
                 Quaternion currentRotation =
@@ -100,6 +105,9 @@ namespace SG
 
         public void AttemptToTryDodge()
         {
+            if (isAction)
+                return;
+            isAction = true;
             if (InputManager.instance.GetMove() == Vector2.zero)
             {
                 player._playerAnimationManager.UpdateRollAnimation("Backflip", true);
@@ -108,6 +116,11 @@ namespace SG
             {
                 player._playerAnimationManager.UpdateRollAnimation("roll_front", true);
             }
+        }
+        
+        public void StopAction()
+        {
+            isAction = false;
         }
     }
 }
